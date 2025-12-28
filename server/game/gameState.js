@@ -22,8 +22,10 @@ export async function getPlayerState(playerId) {
  * Update player state and handle level ups
  */
 export async function updatePlayerState(playerId, rewards) {
+  let player = null;
+
   try {
-    const player = await getPlayerState(playerId);
+    player = await getPlayerState(playerId);
 
     if (!player) {
       return null;
@@ -37,31 +39,40 @@ export async function updatePlayerState(playerId, rewards) {
     while (newXp >= LEVEL_UP_THRESHOLD * newLevel) {
       newXp -= LEVEL_UP_THRESHOLD * newLevel;
       newLevel += 1;
-      
+
       // Stat increases per level
       newMaxHp += 20;
     }
 
-    // Update player
+    // Calculate stat increases (in JavaScript, not SQL)
+    const hpIncrease = Math.floor((newMaxHp - player.max_hp) / 2);
+    const atkIncrease = (newLevel - player.level) * 2;
+    const defIncrease = (newLevel - player.level);
+    const newHp = Math.max(1, player.hp + hpIncrease);
+    const newAtk = player.atk + atkIncrease;
+    const newDef = player.def + defIncrease;
+
+    // Update player with calculated values
     const result = await pool.query(
-      `UPDATE players 
+      `UPDATE players
        SET gold = gold + $1,
            experience = $2,
            level = $3,
            max_hp = $4,
-           hp = hp + (($4 - $5) / 2),
-           atk = atk + ($3 - $6) * 2,
-           def = def + ($3 - $6),
+           hp = $5,
+           atk = $6,
+           def = $7,
            updated_at = CURRENT_TIMESTAMP
-       WHERE id = $7
+       WHERE id = $8
        RETURNING *`,
       [
         rewards.gold || 0,
         newXp,
         newLevel,
         newMaxHp,
-        player.max_hp,
-        player.level,
+        newHp,
+        newAtk,
+        newDef,
         playerId
       ]
     );
@@ -69,6 +80,7 @@ export async function updatePlayerState(playerId, rewards) {
     return result.rows[0];
   } catch (error) {
     console.error('Update state error:', error);
+    // Return the original player data if update failed
     return player;
   }
 }
