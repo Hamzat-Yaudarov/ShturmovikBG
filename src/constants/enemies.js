@@ -7,7 +7,7 @@ export const ENEMY_DEFINITIONS = {
       hp: 30,
       atk: 5,
       def: 2,
-      xp: 50,
+      xp: 8,
       gold: 20
     },
     {
@@ -17,7 +17,7 @@ export const ENEMY_DEFINITIONS = {
       hp: 45,
       atk: 8,
       def: 3,
-      xp: 80,
+      xp: 12,
       gold: 35
     },
     {
@@ -27,7 +27,7 @@ export const ENEMY_DEFINITIONS = {
       hp: 60,
       atk: 12,
       def: 4,
-      xp: 120,
+      xp: 16,
       gold: 50
     },
     {
@@ -37,7 +37,7 @@ export const ENEMY_DEFINITIONS = {
       hp: 75,
       atk: 15,
       def: 5,
-      xp: 150,
+      xp: 20,
       gold: 65
     }
   ],
@@ -49,7 +49,7 @@ export const ENEMY_DEFINITIONS = {
       hp: 90,
       atk: 18,
       def: 6,
-      xp: 200,
+      xp: 25,
       gold: 80
     },
     {
@@ -59,7 +59,7 @@ export const ENEMY_DEFINITIONS = {
       hp: 100,
       atk: 22,
       def: 7,
-      xp: 250,
+      xp: 30,
       gold: 100
     },
     {
@@ -69,7 +69,7 @@ export const ENEMY_DEFINITIONS = {
       hp: 110,
       atk: 25,
       def: 8,
-      xp: 300,
+      xp: 35,
       gold: 120
     },
     {
@@ -79,7 +79,7 @@ export const ENEMY_DEFINITIONS = {
       hp: 125,
       atk: 28,
       def: 9,
-      xp: 350,
+      xp: 40,
       gold: 140
     }
   ]

@@ -28,9 +28,9 @@ export async function calculateOfflineProgress(playerId) {
     const offlineHours = Math.min(timeDiffHours, 8);
 
     // Calculate offline income
-    // Base income: 10 gold per minute, 5 XP per minute
+    // Base income: 10 gold per minute, 0.5 XP per minute (reduced from 5 to prevent fast leveling)
     const goldPerMinute = 10 + (player.atk / 10); // Scales with ATK
-    const xpPerMinute = 5 + (player.level / 2); // Scales with level
+    const xpPerMinute = 0.5 + (player.level / 50); // Much slower XP growth
 
     const offlineMinutes = Math.floor(offlineHours * 60);
     const goldEarned = Math.floor(goldPerMinute * offlineMinutes);
