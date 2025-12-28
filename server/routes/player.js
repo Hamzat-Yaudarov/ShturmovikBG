@@ -66,6 +66,61 @@ router.get('/equipment', verifyTelegramData, async (req, res) => {
   }
 });
 
+// Upgrade player stat
+router.post('/upgrade', verifyTelegramData, async (req, res) => {
+  try {
+    const { stat } = req.body;
+    const telegramId = req.user.id;
+
+    const validStats = ['atk', 'def', 'hp'];
+    if (!validStats.includes(stat)) {
+      return res.status(400).json({ error: 'Invalid stat' });
+    }
+
+    const playerResult = await pool.query(
+      'SELECT * FROM players WHERE telegram_id = $1',
+      [telegramId]
+    );
+
+    if (playerResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Player not found' });
+    }
+
+    const player = playerResult.rows[0];
+
+    // Calculate upgrade cost (base 100 gold, scales with level)
+    const upgradeCost = 100 * player.level;
+
+    if (player.gold < upgradeCost) {
+      return res.status(400).json({ error: 'Insufficient gold', requiredGold: upgradeCost });
+    }
+
+    // Upgrade stat based on type
+    let statIncrease = 0;
+    if (stat === 'atk') {
+      statIncrease = 5 + Math.floor(player.level / 5);
+    } else if (stat === 'def') {
+      statIncrease = 3 + Math.floor(player.level / 7);
+    } else if (stat === 'hp') {
+      statIncrease = 50 + player.level * 2;
+    }
+
+    // Update player
+    const updateQuery = stat === 'atk'
+      ? 'UPDATE players SET atk = atk + $1, gold = gold - $2, updated_at = CURRENT_TIMESTAMP WHERE id = $3 RETURNING *'
+      : stat === 'def'
+      ? 'UPDATE players SET def = def + $1, gold = gold - $2, updated_at = CURRENT_TIMESTAMP WHERE id = $3 RETURNING *'
+      : 'UPDATE players SET max_hp = max_hp + $1, hp = hp + $1, gold = gold - $2, updated_at = CURRENT_TIMESTAMP WHERE id = $3 RETURNING *';
+
+    const result = await pool.query(updateQuery, [statIncrease, upgradeCost, player.id]);
+
+    res.json({ success: true, player: result.rows[0] });
+  } catch (error) {
+    console.error('Upgrade error:', error);
+    res.status(500).json({ error: 'Failed to upgrade stat' });
+  }
+});
+
 // Equip item
 router.post('/equip', verifyTelegramData, async (req, res) => {
   try {

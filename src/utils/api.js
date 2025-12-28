@@ -49,6 +49,7 @@ export const api = {
   getProfile: () => apiRequest('/player/profile'),
   getEquipment: () => apiRequest('/player/equipment'),
   equipItem: (itemId) => apiRequest('/player/equip', 'POST', { itemId }),
+  upgradeStat: (stat) => apiRequest('/player/upgrade', 'POST', { stat }),
 
   // Quests
   getQuests: () => apiRequest('/quests'),

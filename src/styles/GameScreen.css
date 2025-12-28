@@ -61,33 +61,25 @@
   color: #66ffbb;
 }
 
-.location-selector {
-  display: flex;
-  gap: 8px;
+.location-display {
+  padding: 8px 20px;
+  background: rgba(0, 100, 255, 0.15);
+  border: 1px solid #0066ff;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #66ccff;
+  text-shadow: 0 0 8px rgba(102, 204, 255, 0.5);
+  animation: glow 2s ease-in-out infinite;
 }
 
-.location-btn {
-  padding: 8px 16px;
-  background: #1a1a1a;
-  color: #888;
-  border: 1px solid #333;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.location-btn:hover {
-  background: #222;
-  border-color: #444;
-  color: #aaa;
-}
-
-.location-btn.active {
-  background: #0066ff;
-  border-color: #0066ff;
-  color: #ffffff;
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 8px rgba(102, 204, 255, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 16px rgba(102, 204, 255, 0.8);
+  }
 }
 
 .canvas-container {
