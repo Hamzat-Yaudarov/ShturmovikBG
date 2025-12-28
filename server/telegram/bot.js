@@ -91,9 +91,19 @@ export function initializeBot() {
       bot.setMyCommands([
         { command: 'start', description: 'Start playing the game' }
       ]);
-      console.log('✓ Telegram bot initialized');
     } catch (error) {
       console.error('Failed to set bot commands:', error.message);
+    }
+
+    // START POLLING - This is CRITICAL for the bot to receive messages
+    try {
+      bot.startPolling({
+        allowed_updates: ['message', 'callback_query'],
+        poll_interval: 300
+      });
+      console.log('✓ Telegram bot initialized and listening for messages');
+    } catch (error) {
+      console.error('Failed to start bot polling:', error.message);
     }
   }
 }
