@@ -12,10 +12,19 @@ router.post('/state', verifyTelegramData, async (req, res) => {
     const telegramId = req.user.id;
 
     // Get player data
-    const playerResult = await pool.query(
-      'SELECT * FROM players WHERE telegram_id = $1',
-      [telegramId]
-    );
+    let playerResult;
+    try {
+      playerResult = await pool.query(
+        'SELECT * FROM players WHERE telegram_id = $1',
+        [telegramId]
+      );
+    } catch (dbError) {
+      console.error('Database query error:', dbError.message);
+      return res.status(503).json({
+        error: 'Database connection failed',
+        message: 'Please check your DATABASE_URL environment variable'
+      });
+    }
 
     if (playerResult.rows.length === 0) {
       return res.status(404).json({ error: 'Player not found' });

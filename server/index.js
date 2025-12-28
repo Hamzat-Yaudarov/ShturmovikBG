@@ -26,8 +26,17 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static(join(__dirname, '../public')));
 
-// Initialize database
-await initDatabase();
+// Middleware to ensure database is initialized before API calls
+app.use('/api', async (req, res, next) => {
+  await initDatabase();
+  next();
+});
+
+// Initialize database (non-blocking)
+initDatabase().catch(err => {
+  console.error('Initial database initialization failed:', err.message);
+  console.log('Will retry on first API request...');
+});
 
 // Initialize Telegram bot
 initializeBot();
@@ -40,7 +49,7 @@ app.use('/api/clans', clanRoutes);
 
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'ok' });
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
 // Serve frontend
@@ -49,6 +58,6 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-  console.log(`Mini App URL: ${process.env.WEBAPP_URL}`);
+  console.log(`\n✓ Server running on port ${PORT}`);
+  console.log(`✓ Mini App URL: ${process.env.WEBAPP_URL}\n`);
 });

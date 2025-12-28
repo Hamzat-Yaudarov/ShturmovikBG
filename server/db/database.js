@@ -4,22 +4,43 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+// Log database configuration for debugging
+if (!process.env.DATABASE_URL) {
+  console.warn('⚠️ WARNING: DATABASE_URL environment variable not set');
+  console.warn('📌 Please set DATABASE_URL in your Railway project settings');
+} else {
+  console.log('✓ DATABASE_URL is configured');
+}
+
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
 });
 
+let dbInitialized = false;
+
 export async function initDatabase() {
+  if (dbInitialized) return;
+
   try {
     // Test connection
     const result = await pool.query('SELECT NOW()');
-    console.log('Database connected:', result.rows[0]);
+    console.log('✓ Database connected:', result.rows[0]);
 
     // Create tables
     await createTables();
+    dbInitialized = true;
+    console.log('✓ Database tables initialized');
   } catch (error) {
-    console.error('Database error:', error);
-    process.exit(1);
+    console.error('✗ Database connection error:', error.message);
+    console.error('📌 Make sure DATABASE_URL is correct in your environment variables');
+    console.error('📌 Connection string format: postgresql://user:password@host:port/database');
+
+    // Don't crash the app - retry on next API call
+    console.log('⏳ Database initialization deferred - will retry on next request');
   }
 }
 
