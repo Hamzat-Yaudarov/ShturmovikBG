@@ -30,11 +30,13 @@ export function verifyTelegramData(req, res, next) {
       .join('\n');
 
     // Verify using HMAC (Telegram format)
+    // Secret key = HMAC-SHA256("WebAppData", BOT_TOKEN)
     const secret = crypto
-      .createHmac('sha256', process.env.BOT_TOKEN)
-      .update('WebAppData')
+      .createHmac('sha256', 'WebAppData')
+      .update(process.env.BOT_TOKEN)
       .digest();
 
+    // Hash = HMAC-SHA256(secret_key, data_check_string)
     const calculatedHash = crypto
       .createHmac('sha256', secret)
       .update(dataCheckString)
