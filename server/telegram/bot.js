@@ -5,9 +5,26 @@ import { initializeQuestsForPlayer } from '../game/quests.js';
 
 dotenv.config();
 
-const bot = new TelegramBot(process.env.BOT_TOKEN);
+let bot = null;
 
 export function initializeBot() {
+  // Check if BOT_TOKEN is available
+  if (!process.env.BOT_TOKEN) {
+    console.error('🔴 CRITICAL: BOT_TOKEN environment variable not set');
+    console.error('📌 Please add BOT_TOKEN to your Railway project settings');
+    console.error('📌 Get your token from @BotFather on Telegram');
+    console.log('⏸️ Bot initialization skipped - set BOT_TOKEN and redeploy');
+    return;
+  }
+
+  try {
+    bot = new TelegramBot(process.env.BOT_TOKEN);
+  } catch (error) {
+    console.error('🔴 Failed to initialize Telegram bot:', error.message);
+    console.log('⏸️ Bot will not be available');
+    return;
+  }
+
   // Handle /start command
   bot.onText(/\/start/, async (msg) => {
     const chatId = msg.chat.id;
@@ -48,28 +65,37 @@ export function initializeBot() {
         ]
       };
 
-      bot.sendMessage(
-        chatId,
-        `👋 Welcome to Idle RPG, ${username}!\n\n` +
-        `🏃 Your character runs and fights automatically\n` +
-        `💎 Collect loot and level up\n` +
-        `📈 Progress even when offline\n` +
-        `👥 Join a clan with your friends\n\n` +
-        `Tap the button below to start your adventure!`,
-        { reply_markup: keyboard }
-      );
+      if (bot) {
+        bot.sendMessage(
+          chatId,
+          `👋 Welcome to Idle RPG, ${username}!\n\n` +
+          `🏃 Your character runs and fights automatically\n` +
+          `💎 Collect loot and level up\n` +
+          `📈 Progress even when offline\n` +
+          `👥 Join a clan with your friends\n\n` +
+          `Tap the button below to start your adventure!`,
+          { reply_markup: keyboard }
+        );
+      }
     } catch (error) {
       console.error('Bot error:', error);
-      bot.sendMessage(chatId, 'Error starting game. Please try again.');
+      if (bot) {
+        bot.sendMessage(chatId, 'Error starting game. Please try again.');
+      }
     }
   });
 
   // Set bot commands
-  bot.setMyCommands([
-    { command: 'start', description: 'Start playing the game' }
-  ]);
-
-  console.log('Telegram bot initialized');
+  if (bot) {
+    try {
+      bot.setMyCommands([
+        { command: 'start', description: 'Start playing the game' }
+      ]);
+      console.log('✓ Telegram bot initialized');
+    } catch (error) {
+      console.error('Failed to set bot commands:', error.message);
+    }
+  }
 }
 
 export { bot };
