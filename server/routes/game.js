@@ -10,6 +10,7 @@ const router = express.Router();
 router.post('/state', verifyTelegramData, async (req, res) => {
   try {
     const telegramId = req.user.id;
+    const username = req.user.username || req.user.firstName || 'Player';
 
     // Get player data
     let playerResult;
@@ -26,8 +27,28 @@ router.post('/state', verifyTelegramData, async (req, res) => {
       });
     }
 
+    let player;
+
+    // Create player if doesn't exist (first time login)
     if (playerResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Player not found' });
+      console.log(`Creating new player: ${telegramId}`);
+      try {
+        const createResult = await pool.query(
+          'INSERT INTO players (telegram_id, username) VALUES ($1, $2) RETURNING *',
+          [telegramId, username]
+        );
+        player = createResult.rows[0];
+        console.log(`✓ New player created: ${telegramId}`);
+
+        // Initialize quests for new player
+        const { initializeQuestsForPlayer } = await import('../game/quests.js');
+        await initializeQuestsForPlayer(player.id);
+      } catch (createError) {
+        console.error('Failed to create player:', createError.message);
+        return res.status(500).json({ error: 'Failed to create player' });
+      }
+    } else {
+      player = playerResult.rows[0];
     }
 
     const player = playerResult.rows[0];
