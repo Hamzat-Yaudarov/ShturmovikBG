@@ -1,0 +1,168 @@
+.quest-screen {
+  padding: 20px;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.quest-screen h1 {
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+.quest-section {
+  margin-bottom: 28px;
+}
+
+.quest-section h3 {
+  font-size: 14px;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.no-quests {
+  text-align: center;
+  color: #666;
+  padding: 30px 20px;
+  background: #1a1a1a;
+  border: 1px solid #222;
+  border-radius: 12px;
+  font-size: 14px;
+}
+
+.quest-list,
+.completed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quest-card {
+  background: #1a1a1a;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 16px;
+  border-left: 4px solid #0066ff;
+}
+
+.quest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.quest-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.quest-type {
+  font-size: 11px;
+  background: rgba(0, 102, 255, 0.2);
+  color: #66aaff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.quest-progress {
+  margin-bottom: 12px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #0a0a0a;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 6px;
+  border: 1px solid #222;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00cc88, #00ff99);
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: #888;
+  text-align: right;
+}
+
+.quest-rewards {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.reward {
+  font-size: 13px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.reward.gold {
+  color: #ffcc00;
+}
+
+.reward.xp {
+  color: #00ff99;
+}
+
+.complete-btn {
+  width: 100%;
+  padding: 10px;
+  font-size: 13px;
+  background: linear-gradient(135deg, #00cc88, #00ff99);
+  color: #000;
+  font-weight: 600;
+}
+
+.complete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 255, 153, 0.3);
+}
+
+.completed-quest {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #1a1a1a;
+  border: 1px solid #222;
+  border-radius: 8px;
+  border-left: 4px solid #00cc88;
+}
+
+.quest-check {
+  font-size: 18px;
+  color: #00cc88;
+  font-weight: 700;
+}
+
+.quest-name {
+  flex: 1;
+  font-size: 13px;
+  color: #888;
+}
+
+@media (max-width: 400px) {
+  .quest-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .quest-card {
+    padding: 12px;
+  }
+}

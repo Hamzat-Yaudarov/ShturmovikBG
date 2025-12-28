@@ -1,0 +1,60 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: #000000;
+}
+
+.game-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.nav-tabs {
+  display: flex;
+  justify-content: space-around;
+  gap: 4px;
+  background: #0a0a0a;
+  border-top: 1px solid #222;
+  padding: 8px;
+  position: sticky;
+  bottom: 0;
+}
+
+.nav-btn {
+  flex: 1;
+  padding: 12px 8px;
+  background: #1a1a1a;
+  color: #888;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nav-btn:hover {
+  background: #222;
+  color: #aaa;
+}
+
+.nav-btn.active {
+  background: #0066ff;
+  color: #ffffff;
+}
+
+@media (max-height: 600px) {
+  .nav-tabs {
+    padding: 6px 4px;
+  }
+
+  .nav-btn {
+    padding: 8px 4px;
+    font-size: 11px;
+  }
+}
