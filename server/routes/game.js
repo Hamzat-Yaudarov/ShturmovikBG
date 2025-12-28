@@ -10,45 +10,33 @@ const router = express.Router();
 router.post('/state', verifyTelegramData, async (req, res) => {
   try {
     const telegramId = req.user.id;
-    const username = req.user.username || req.user.firstName || 'Player';
+    const { username, firstName, lastName, photoUrl } = req.user;
 
-    // Get player data
+    // Get or create player
     let playerResult;
     try {
       playerResult = await pool.query(
         'SELECT * FROM players WHERE telegram_id = $1',
         [telegramId]
       );
+
+      // Create new player if doesn't exist
+      if (playerResult.rows.length === 0) {
+        console.log(`Creating new player for Telegram ID: ${telegramId}`);
+
+        playerResult = await pool.query(
+          `INSERT INTO players (telegram_id, username, level, experience, gold, hp, max_hp, atk, def, attack_speed, current_location, last_login, last_offline_calc, created_at, updated_at)
+           VALUES ($1, $2, 1, 0, 0, 100, 100, 10, 5, 1.0, 'forest', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+           RETURNING *`,
+          [telegramId, username || `User_${telegramId}`]
+        );
+      }
     } catch (dbError) {
       console.error('Database query error:', dbError.message);
       return res.status(503).json({
         error: 'Database connection failed',
         message: 'Please check your DATABASE_URL environment variable'
       });
-    }
-
-    let player;
-
-    // Create player if doesn't exist (first time login)
-    if (playerResult.rows.length === 0) {
-      console.log(`Creating new player: ${telegramId}`);
-      try {
-        const createResult = await pool.query(
-          'INSERT INTO players (telegram_id, username) VALUES ($1, $2) RETURNING *',
-          [telegramId, username]
-        );
-        player = createResult.rows[0];
-        console.log(`✓ New player created: ${telegramId}`);
-
-        // Initialize quests for new player
-        const { initializeQuestsForPlayer } = await import('../game/quests.js');
-        await initializeQuestsForPlayer(player.id);
-      } catch (createError) {
-        console.error('Failed to create player:', createError.message);
-        return res.status(500).json({ error: 'Failed to create player' });
-      }
-    } else {
-      player = playerResult.rows[0];
     }
 
     const player = playerResult.rows[0];
