@@ -22,11 +22,6 @@ export default function GameScreen({ gameState, setGameState }) {
     const parentWidth = gameRef.current.clientWidth || 800;
     const parentHeight = gameRef.current.clientHeight || 600;
 
-    // Determine which background to load
-    const bgPath = location === 'forest' 
-      ? 'Assets/Mobs/Лес/Фон/gen-043ead7a-b125-42d2-b8e9-36e2583e024e.png'
-      : 'Assets/Mobs/Руины/Фон/gen-4c74d1f4-f249-41ad-91d2-39a8725e26c2.png';
-
     // Create Phaser game config
     const config = {
       type: Phaser.AUTO,
@@ -56,40 +51,40 @@ export default function GameScreen({ gameState, setGameState }) {
 
     function preload() {
       // Load backgrounds
-      this.load.image('bg-forest', 'Assets/Mobs/Лес/Фон/gen-043ead7a-b125-42d2-b8e9-36e2583e024e.png');
-      this.load.image('bg-ruins', 'Assets/Mobs/Руины/Фон/gen-4c74d1f4-f249-41ad-91d2-39a8725e26c2.png');
+      this.load.image('bg-forest', '/Mobs/Лес/Фон/gen-043ead7a-b125-42d2-b8e9-36e2583e024e.png');
+      this.load.image('bg-ruins', '/Mobs/Руины/Фон/gen-4c74d1f4-f249-41ad-91d2-39a8725e26c2.png');
 
       // Load player sprite sheets (4 frames 64x64)
-      this.load.spritesheet('player-idle', 'Assets/Player/Animation/Idle/sprite-64px-4 (23).png', { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet('player-run', 'Assets/Player/Animation/running/sprite-64px-4 (21).png', { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet('player-attack', 'Assets/Player/Animation/Attack/sprite-64px-4 (20).png', { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet('player-death', 'Assets/Player/Animation/death/sprite-64px-4 (22).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('player-idle', '/Player/Animation/Idle/sprite-64px-4 (23).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('player-run', '/Player/Animation/running/sprite-64px-4 (21).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('player-attack', '/Player/Animation/Attack/sprite-64px-4 (20).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('player-death', '/Player/Animation/death/sprite-64px-4 (22).png', { frameWidth: 64, frameHeight: 64 });
 
       // Load enemy sprite sheets - Forest
-      this.load.spritesheet('enemy-deer', 'Assets/Mobs/Лес/Deer Distorted/Attack/sprite-64px-4 (4).png', { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet('enemy-deer-death', 'Assets/Mobs/Лес/Deer Distorted/Death/sprite-64px-4 (5).png', { frameWidth: 64, frameHeight: 64 });
-      
-      this.load.spritesheet('enemy-mushroom', 'Assets/Mobs/Лес/Mushroom Carrier/Attack/sprite-64px-4.png', { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet('enemy-mushroom-death', 'Assets/Mobs/Лес/Mushroom Carrier/Death/sprite-64px-4 (1).png', { frameWidth: 64, frameHeight: 64 });
-      
-      this.load.spritesheet('enemy-whisperer', 'Assets/Mobs/Лес/Forest Whisperer/Attack/sprite-64px-4 (8).png', { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet('enemy-whisperer-death', 'Assets/Mobs/Лес/Forest Whisperer/Death/sprite-64px-4 (10).png', { frameWidth: 64, frameHeight: 64 });
-      
-      this.load.spritesheet('enemy-root', 'Assets/Mobs/Лес/Rotten root/Attack/sprite-64px-4 (2).png', { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet('enemy-root-death', 'Assets/Mobs/Лес/Rotten root/Death/sprite-64px-4 (3).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('enemy-deer', '/Mobs/Лес/Deer Distorted/Attack/sprite-64px-4 (4).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('enemy-deer-death', '/Mobs/Лес/Deer Distorted/Death/sprite-64px-4 (5).png', { frameWidth: 64, frameHeight: 64 });
+
+      this.load.spritesheet('enemy-mushroom', '/Mobs/Лес/Mushroom Carrier/Attack/sprite-64px-4.png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('enemy-mushroom-death', '/Mobs/Лес/Mushroom Carrier/Death/sprite-64px-4 (1).png', { frameWidth: 64, frameHeight: 64 });
+
+      this.load.spritesheet('enemy-whisperer', '/Mobs/Лес/Forest Whisperer/Attack/sprite-64px-4 (8).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('enemy-whisperer-death', '/Mobs/Лес/Forest Whisperer/Death/sprite-64px-4 (10).png', { frameWidth: 64, frameHeight: 64 });
+
+      this.load.spritesheet('enemy-root', '/Mobs/Лес/Rotten root/Attack/sprite-64px-4 (2).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('enemy-root-death', '/Mobs/Лес/Rotten root/Death/sprite-64px-4 (3).png', { frameWidth: 64, frameHeight: 64 });
 
       // Load enemy sprite sheets - Ruins
-      this.load.spritesheet('enemy-guardian', 'Assets/Mobs/Руины/Bone Guardian/Attack/sprite-64px-4 (11).png', { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet('enemy-guardian-death', 'Assets/Mobs/Руины/Bone Guardian/Death/sprite-64px-4 (12).png', { frameWidth: 64, frameHeight: 64 });
-      
-      this.load.spritesheet('enemy-shadow', 'Assets/Mobs/Руины/Shadow Blade/Attack/sprite-64px-4 (14).png', { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet('enemy-shadow-death', 'Assets/Mobs/Руины/Shadow Blade/Death/sprite-64px-4 (13).png', { frameWidth: 64, frameHeight: 64 });
-      
-      this.load.spritesheet('enemy-psalm', 'Assets/Mobs/Руины/Scarlet Psalm-Reader/Attack/sprite-64px-4 (16).png', { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet('enemy-psalm-death', 'Assets/Mobs/Руины/Scarlet Psalm-Reader/Death/sprite-64px-4 (17).png', { frameWidth: 64, frameHeight: 64 });
-      
-      this.load.spritesheet('enemy-archivist', 'Assets/Mobs/Руины/Dusty Archivist/Attack/sprite-64px-4 (18).png', { frameWidth: 64, frameHeight: 64 });
-      this.load.spritesheet('enemy-archivist-death', 'Assets/Mobs/Руины/Dusty Archivist/Death/sprite-64px-4 (19).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('enemy-guardian', '/Mobs/Руины/Bone Guardian/Attack/sprite-64px-4 (11).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('enemy-guardian-death', '/Mobs/Руины/Bone Guardian/Death/sprite-64px-4 (12).png', { frameWidth: 64, frameHeight: 64 });
+
+      this.load.spritesheet('enemy-shadow', '/Mobs/Руины/Shadow Blade/Attack/sprite-64px-4 (14).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('enemy-shadow-death', '/Mobs/Руины/Shadow Blade/Death/sprite-64px-4 (13).png', { frameWidth: 64, frameHeight: 64 });
+
+      this.load.spritesheet('enemy-psalm', '/Mobs/Руины/Scarlet Psalm-Reader/Attack/sprite-64px-4 (16).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('enemy-psalm-death', '/Mobs/Руины/Scarlet Psalm-Reader/Death/sprite-64px-4 (17).png', { frameWidth: 64, frameHeight: 64 });
+
+      this.load.spritesheet('enemy-archivist', '/Mobs/Руины/Dusty Archivist/Attack/sprite-64px-4 (18).png', { frameWidth: 64, frameHeight: 64 });
+      this.load.spritesheet('enemy-archivist-death', '/Mobs/Руины/Dusty Archivist/Death/sprite-64px-4 (19).png', { frameWidth: 64, frameHeight: 64 });
     }
 
     function create() {

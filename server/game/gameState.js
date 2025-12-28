@@ -1,6 +1,6 @@
 import { pool } from '../db/database.js';
 
-const LEVEL_UP_THRESHOLD = 100; // XP needed per level
+const LEVEL_UP_THRESHOLD = 500; // XP needed per level (was 100, too fast)
 
 /**
  * Get player state with proper calculations

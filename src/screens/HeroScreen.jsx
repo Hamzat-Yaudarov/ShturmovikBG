@@ -10,7 +10,7 @@ export default function HeroScreen({ gameState, setGameState }) {
 
   if (!character) return <div className="hero-screen"><p>Loading...</p></div>;
 
-  const nextLevelXp = character.level * 100;
+  const nextLevelXp = character.level * 500;
   const xpProgress = (character.experience % nextLevelXp) / nextLevelXp * 100;
 
   // Calculate upgrade costs
