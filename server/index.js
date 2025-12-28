@@ -24,7 +24,12 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-app.use(express.static(join(__dirname, '../public')));
+
+// Serve static files from dist folder (built frontend)
+app.use(express.static(join(__dirname, '../dist'), {
+  maxAge: '1d',
+  etag: false
+}));
 
 // Middleware to ensure database is initialized before API calls
 app.use('/api', async (req, res, next) => {
@@ -52,8 +57,9 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// Serve frontend
-app.get('/', (req, res) => {
+// SPA fallback - serve index.html for all non-API routes
+// This allows React Router to handle routing on the client
+app.get('*', (req, res) => {
   res.sendFile(join(__dirname, '../dist/index.html'));
 });
 
